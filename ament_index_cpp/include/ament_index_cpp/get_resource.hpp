@@ -27,7 +27,8 @@ bool
 get_resource(
   const std::string & resource_type,
   const std::string & resource_name,
-  std::string & content);
+  std::string & content,
+  std::string * prefix_path = nullptr);
 
 }  // namespace ament_index_cpp
 

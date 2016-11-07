@@ -29,7 +29,8 @@ bool
 get_resource(
   const std::string & resource_type,
   const std::string & resource_name,
-  std::string & content)
+  std::string & content,
+  std::string * prefix_path)
 {
   if (resource_type.empty()) {
     throw std::runtime_error("ament_index_cpp::get_resource() resource type must not be empty");
@@ -38,14 +39,17 @@ get_resource(
     throw std::runtime_error("ament_index_cpp::get_resource() resource name must not be empty");
   }
   auto paths = get_search_paths();
-  for (auto base_path : paths) {
-    auto path = base_path + "/share/ament_index/resource_index/" +
+  for (auto path : paths) {
+    auto resource_path = path + "/share/ament_index/resource_index/" +
       resource_type + "/" + resource_name;
-    std::ifstream s(path);
+    std::ifstream s(resource_path);
     if (s.is_open()) {
       std::stringstream buffer;
       buffer << s.rdbuf();
       content = buffer.str();
+      if (prefix_path) {
+        *prefix_path = path;
+      }
       return true;
     }
   }
